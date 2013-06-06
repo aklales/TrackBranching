@@ -1,8 +1,9 @@
 %% 2D FFT split operator code
 
+
 %% parameters for random potential
 clear all;
-DoYouWantAMovie = 0;
+DoYouWantAMovie = 0;  %Set to 1 to create and save an animation. Set to 0 save time.
 hbar = 1;
 
 
