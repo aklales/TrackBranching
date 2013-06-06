@@ -1,5 +1,7 @@
 %% 2D FFT split operator code
 
+%% For fuck's sake
+
 %% parameters for random potential
 clear all;
 DoYouWantAMovie = 0;
