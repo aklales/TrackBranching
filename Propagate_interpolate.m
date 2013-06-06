@@ -1,4 +1,5 @@
 %%  Propagate the particles
+%% COMMENT ALL THE THINGS GITHUB IS COOL BUT DOES IT WORK WHO NEEDS PUNCTUATION LOL
 
 %clear all;
 D2 = 1;
