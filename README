@@ -1,1 +1,16 @@
 This is our quantum propagation code.
+
+FFT2D_Quantum
+	This is the split operator quantum code.
+
+Propagate_interpolate
+	This is the classical code for propagation.
+
+Potential…
+	This stores the potential that we're using, along with derivatives of the potential and spacial vectors representing the dimensions of the space.
+
+betterbinz
+	Is used to display the classical results as a density.
+
+
+
