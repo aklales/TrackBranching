@@ -116,7 +116,7 @@ for kk = 1:(time/dt)
 
 end
 
-save('Output2D.mat','Eigen','Psi')
+save('QuantumOutput2D.mat','Eigen','Psi')
 
 disp('Done!')
 if DoYouWantAMovie == 1

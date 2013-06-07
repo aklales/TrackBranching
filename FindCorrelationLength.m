@@ -1,4 +1,6 @@
 function[sigma,cf] = FindCorrelationLength(V,splitdim,dx)
+%   cf is correlation function
+
 
 dims = size(V);
 mm = dims(1);
