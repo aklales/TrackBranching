@@ -3,7 +3,6 @@
 
 
 
-
 DontReload = 0;
 
 
@@ -27,8 +26,7 @@ if DontReload == 0
     Lx = xV(end);           %real dimensions of rectangle 
     Ly = yV(end);
 
-    buffx = ceil(vel*dt/dx);
-    buffy = ceil(vel*dt/dy);
+
 end
 
 
@@ -43,7 +41,8 @@ np = 100;
 vel = 4;                % initial velocity of particle
 time = 10000;
 dt = 0.01;
-
+    buffx = ceil(vel*dt/dx);
+    buffy = ceil(vel*dt/dy);
 
 
 

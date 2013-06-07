@@ -1,6 +1,5 @@
 %% 2D FFT split operator code
 
-%% For fuck's sake
 
 %% parameters for random potential
 clear all;
@@ -17,7 +16,7 @@ PEHO = 8.0;  %potential energy from harmonic oscillator
 load('Potential_4096_1024_i.mat')  % loads xx, yy and V
 disp('Potential loaded...')
 clear('Fx_rand','Fx_QPC','Fy_rand','Fy_QPC','Fxx_rand', 'Fxy_rand', 'Fyy_rand','Fxx_QPC', 'Fxy_QPC', 'Fyy_QPC');
-Vimag = Z_AbsorbingBoundary(length(xx),length(yy),0.08);
+Vimag = AbsorbingBoundary(length(xx),length(yy),0.08);
 
 V = V_QPC -  0.0033*1i*Vimag + Vrand;
 
@@ -51,7 +50,7 @@ Kshift = fftshift(K);
 B = 20;         %   Initial wavefunction amplitude
 a = 1.5;          %   Initial wavefunction width
 x0 = 6.0;       %   Initial center position of inital wavefunction
-y0 = Ly/2;;
+y0 = Ly/2;
 p0 = 4.0;       %   Initial wavefunction momentum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
