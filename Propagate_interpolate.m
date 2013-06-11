@@ -40,7 +40,7 @@ np = 1;
 
 vel = 4;                % initial velocity of particle
 time = 100;
-dt = 0.01;
+dt = 0.0001;
     buffx = ceil(vel*dt/dx);
     buffy = ceil(vel*dt/dy);
 
@@ -143,7 +143,8 @@ for ii = 1:np
             K(2,4) = -Fyy(xf,yf);
         
             msub = squeeze(M(ii,jj,:,:));
-            M(ii,jj+1,:,:) = msub + K*msub*sqrt(vx(ii)^2+vy(ii)^2)*dt;
+            %M(ii,jj+1,:,:) = msub + K*msub*sqrt(vx(ii)^2+vy(ii)^2)*dt;
+            M(ii,jj+1,:,:) = msub + K*msub*dt;
         end
         
         vvxx(ii,jj) = vx(ii);
