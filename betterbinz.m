@@ -1,4 +1,4 @@
-function[binz] = betterbinz(nx_bins,ny_bins,xx,yy,Lx,Ly,DontReload)
+function[binz] = betterbinz(nx_bins,ny_bins,xx,yy,Lx,Ly)
 
 
 %   You choose nx_bins and ny_bins
@@ -6,9 +6,7 @@ function[binz] = betterbinz(nx_bins,ny_bins,xx,yy,Lx,Ly,DontReload)
 %   binz is a 2D histogram of the density of classical particles
 
 
-if DontReload == 0
-    binz = zeros(nx_bins,ny_bins);
-end
+binz = zeros(nx_bins,ny_bins);
 
 
 bob = size(xx);

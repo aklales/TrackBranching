@@ -32,21 +32,21 @@ end
 
 D2 = 1;
 m = 1;
-DoStability = 0;
+DoStability = 1;
 PEHO = 8;
 
-np = 100;
+np = 1;
 
 
 vel = 4;                % initial velocity of particle
-time = 10000;
+time = 100;
 dt = 0.01;
     buffx = ceil(vel*dt/dx);
     buffy = ceil(vel*dt/dy);
 
 
 
-if DoStability ==1
+if DoStability == 1
     Fxx = Fxx_rand + Fxx_QPC;
     Fyy = Fyy_rand + Fyy_QPC;
     Fxy = Fxy_rand + Fxy_QPC;
@@ -111,7 +111,7 @@ end
 
 %% BEGIN PARTICLE-TIME LOOPS
 for ii = 1:np
-    if mod(ii,10)==0
+    if mod(ii,100)==0
         fprintf('On particle %d of %d\n',ii,np)
     end
     for jj = 1:time
@@ -133,7 +133,7 @@ for ii = 1:np
         xx(ii,jj+1) = xx(ii,jj) + vx(ii)*dt;
         yy(ii,jj+1) = yy(ii,jj) + vy(ii)*dt;  
         
-        if DoStability ==1
+        if DoStability == 1
             K = zeros(4);
             K(3,1) = 1;
             K(4,2) = 1;
@@ -142,7 +142,8 @@ for ii = 1:np
             K(2,3) = -Fxy(xf,yf);
             K(2,4) = -Fyy(xf,yf);
         
-            M(ii,jj+1,:,:) = squeeze(M(ii,jj,:,:)) + K*squeeze(M(ii,jj,:,:))*sqrt(vx(ii)^2+vy(ii)^2)*dt;
+            msub = squeeze(M(ii,jj,:,:));
+            M(ii,jj+1,:,:) = msub + K*msub*sqrt(vx(ii)^2+vy(ii)^2)*dt;
         end
         
         vvxx(ii,jj) = vx(ii);
