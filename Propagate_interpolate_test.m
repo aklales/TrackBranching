@@ -32,10 +32,10 @@ end
 
 D2 = 1;
 m = 1;
-DoStability = 0;
+DoStability = 1;
 PEHO = 8;
 
-np = 100;
+np = 10;
 
 
 vel = 4;                % initial velocity of particle
@@ -53,8 +53,9 @@ if DoStability == 1
     Fxy = Fxy_rand + Fxy_QPC;
 end
 
-xx = zeros(np,time); 
-yy = zeros(np,time);
+targ = 1;
+xx = zeros(np,time/targ); 
+yy = zeros(np,time/targ);
 
 CalculateVelocity = 0;
 if CalculateVelocity == 1
@@ -125,22 +126,37 @@ for ii = 1:np
     for jj = 1:time
 
         
-        xf = floor(xx(ii,jj)/dx);
-        xc = ceil(xx(ii,jj)/dx);
-        yf = floor(yy(ii,jj)/dy);
-        yc = ceil(yy(ii,jj)/dy);
+        xf = floor(xxi(ii)/dx);
+        xc = ceil(xxi(ii)/dx);
+        yf = floor(yyi(ii)/dy);
+        yc = ceil(yyi(ii)/dy);
 
         if ((xf < buffx) || (xf > (nW-buffx)) || (yf < buffy) || (yf > (nL-buffy))) 
                 
             break 
         end                
-        xforce = ((xc-(xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fx(xf,yf) + (-1*xf + (xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fx(xc,yc) + (xc-(xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fx(xf,yc) + (-1*xf + (xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fx(xc,yf));
-        yforce = ((xc-(xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fy(xf,yf) + (-1*xf + (xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fy(xc,yc) + (xc-(xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fy(xf,yc) + (-1*xf + (xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fy(xc,yf));
+        xforce = ((xc-(xxi(ii)/dx))*(yc-(yyi(ii)/dy))*Fx(xf,yf) + (-1*xf + (xxi(ii)/dx))*(-1*yf + (yyi(ii)/dy))*Fx(xc,yc) + (xc-(xxi(ii)/dx))*(-1*yf + (yyi(ii)/dy))*Fx(xf,yc) + (-1*xf + (xxi(ii)/dx))*(yc-(yyi(ii)/dy))*Fx(xc,yf));
+        yforce = ((xc-(xxi(ii)/dx))*(yc-(yyi(ii)/dy))*Fy(xf,yf) + (-1*xf + (xxi(ii)/dx))*(-1*yf + (yyi(ii)/dy))*Fy(xc,yc) + (xc-(xxi(ii)/dx))*(-1*yf + (yyi(ii)/dy))*Fy(xf,yc) + (-1*xf + (xxi(ii)/dx))*(yc-(yyi(ii)/dy))*Fy(xc,yf));
         
         vx(ii) = vx(ii) + dt*xforce/m;
         vy(ii) = vy(ii) + dt*yforce/m; 
-        xx(ii,jj+1) = xx(ii,jj) + vx(ii)*dt;
-        yy(ii,jj+1) = yy(ii,jj) + vy(ii)*dt;  
+        xxi(ii) = xxi(ii) + vx(ii)*dt;
+        yyi(ii) = yyi(ii) + vy(ii)*dt;  
+        
+        
+        if mod(jj-1,targ)==0 && jj>1 
+            index = (jj-1)/targ + 2;
+            xx(ii,index) = xxi(ii);
+            yy(ii,index) = yyi(ii);
+        end
+        
+        
+        
+        
+        
+        
+        
+        
         
         if DoStability == 1
             K = zeros(4);
@@ -173,3 +189,9 @@ end
 
 xx = transpose(xx);
 yy = transpose(yy);
+
+
+
+
+
+
