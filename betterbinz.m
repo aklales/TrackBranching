@@ -1,23 +1,27 @@
-
-xmax = 204.8;
-ymax = 51.2;
-
-nx_bins = 1024;
-ny_bins = 256;
-%binz2 = zeros(nx_bins,ny_bins);
+function[binz] = betterbinz(nx_bins,ny_bins,xx,yy,Lx,Ly)
 
 
-for jj = 1:10000
-    for ii = 1:10000
+%   You choose nx_bins and ny_bins
+%   xx,yy,Lx,Ly,DontReload all come from Propagate_interpolate
+%   binz is a 2D histogram of the density of classical particles
+
+
+binz = zeros(nx_bins,ny_bins);
+
+
+bob = size(xx);
+
+for jj = 1:bob(2)
+    for ii = 1:bob(1)
         %which bin is this point in?
         
-        if ((xx(ii,jj) > 0) && (yy(ii,jj)>0))
-            m = ceil(nx_bins*xx(ii,jj)/xmax);
+        if ((xx(ii,jj) > 0) && (xx(ii,jj) < Lx) && (yy(ii,jj)>0) && (yy(ii,jj)<Ly))
+            
+            m = ceil(nx_bins*xx(ii,jj)/Lx);
+            n = ceil(ny_bins*yy(ii,jj)/Ly);
         
-            n = ceil(ny_bins*yy(ii,jj)/ymax);
         
-        
-            binz2(m,n) = binz2(m,n) + 1;
+            binz(m,n) = binz(m,n) + 1;
         end
     end
 end

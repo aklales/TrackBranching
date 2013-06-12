@@ -1,68 +1,73 @@
 %%  Propagate the particles
-%% COMMENT ALL THE THINGS GITHUB IS COOL BUT DOES IT WORK WHO NEEDS PUNCTUATION LOL
+%   This code classically propagates np particles over our potential
 
-%clear all;
+
+
+DontReload = 0;
+
+
+
+if DontReload == 0
+    clear all;
+    fprintf('Potential is loading...\n')
+    load('Potential_4096_1024_i.mat')%loads Force and coords of entries in force matrix
+    fprintf('Potential loaded.\n')
+    
+    nW = length(xx);
+    nL = length(yy);
+    xV = xx;
+    yV = yy;
+    Fx = Fx_rand + Fx_QPC;
+    Fy = Fy_rand + Fy_QPC;
+    V = Vrand + V_QPC;
+
+    dx = abs(xV(2)-xV(1));  %spatial difference between adjacent points of potential
+    dy = abs(yV(2)-yV(1));
+    Lx = xV(end);           %real dimensions of rectangle 
+    Ly = yV(end);
+
+
+end
+
+
 D2 = 1;
 m = 1;
 DoStability = 0;
 PEHO = 8;
 
-np = 10000;
+np = 100;
 
 
 vel = 4;                % initial velocity of particle
-time = 10000;
-dt = 0.01;
-
-%load('Potential_4096_1024_i.mat')%loads Force and coords of entries in force matrix
-
-
-%nW = length(xx);
-%nL = length(yy);
-
-%xV = xx;
-%yV = yy;
-
-%Fx = Fx_rand + Fx_QPC;
-%Fy = Fy_rand + Fy_QPC;
-
-%Vrand = V;
-
-%V = Vrand + V_QPC;
+time = 250000;
+dt = 0.0001;
+buffx = ceil(vel*dt/dx);
+buffy = ceil(vel*dt/dy);
 
 
 
-        % number of grid points along
-
-
-%dx = abs(xV(2)-xV(1));  %spatial difference between adjacent points of potential
-%dy = abs(yV(2)-yV(1));
-%Lx = xV(end);           %real dimensions of rectangle 
-%Ly = yV(end);
-
-
-%[Fx,Fy] = forcify(V,dx,dy);
-if DoStability ==1
-%    [Fxx,Fxy] = forcify(Fx,dx,dy);
-%    [Fyx,Fyy] = forcify(Fy,dx,dy);
+if DoStability == 1
+    fprintf('Stability will be calculated.\n')
     Fxx = Fxx_rand + Fxx_QPC;
     Fyy = Fyy_rand + Fyy_QPC;
     Fxy = Fxy_rand + Fxy_QPC;
 end
-%clear('Fx_rand','Fy_rand','Fxy_rand','Fyy_rand','Fxx_rand','Fx_QPC','Fy_QPC','Fxx_QPC','Fxy_QPC','Fyy_QPC','Vimag','Vrand','V_QPC');
 
 xx = zeros(np,time); 
 yy = zeros(np,time);
-vvxx = zeros(np,time);
-vvyy = zeros(np,time);
 
+CalculateVelocity = 0;
+if CalculateVelocity == 1
+    vvxx = zeros(np,time);
+    vvyy = zeros(np,time);
+end
 
 %%  SET UP INTIAL CONDITIONS
-
+fprintf('Initializing...\n')
     
 
-vy = zeros(np,1); %initial momenta of particles
-vx =  vel*ones(np,1); %zeros(np,1); 
+vy = zeros(np,1);           %initial momenta of particles
+vx =  vel*ones(np,1); 
 
 %  (center location, standard deviation, number of particles, nothing)
 xxi = normrnd(6,1.5,np,1);
@@ -94,9 +99,12 @@ for ii = 1:np
     
 end
 
+if CalculateVelocity == 1
+    vvxx(:,1) = vx;
+    vvyy(:,1) = vy;
+end
 
-vvxx(:,1) = vx;
-vvyy(:,1) = vy;
+
 xx(:,1) = xxi;
 yy(:,1) = yyi;
 
@@ -109,36 +117,32 @@ if DoStability ==1
 end
 
 %% BEGIN PARTICLE-TIME LOOPS
+fprintf('Propagation has begun.\n')
 for ii = 1:np
-    if mod(ii,10)==0
-        ii
+    if mod(ii,1)==0
+        fprintf('On particle %d of %d\n',ii,np)
     end
     for jj = 1:time
+
         
         xf = floor(xx(ii,jj)/dx);
         xc = ceil(xx(ii,jj)/dx);
         yf = floor(yy(ii,jj)/dy);
         yc = ceil(yy(ii,jj)/dy);
 
-        if ((xf < 25) || (xf > (nW-25)) || (yf < 25) || (yf > (nL-25))) 
+        if ((xf < buffx) || (xf > (nW-buffx)) || (yf < buffy) || (yf > (nL-buffy))) 
                 
             break 
         end                
         xforce = ((xc-(xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fx(xf,yf) + (-1*xf + (xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fx(xc,yc) + (xc-(xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fx(xf,yc) + (-1*xf + (xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fx(xc,yf));
         yforce = ((xc-(xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fy(xf,yf) + (-1*xf + (xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fy(xc,yc) + (xc-(xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fy(xf,yc) + (-1*xf + (xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fy(xc,yf));
-%         Fx = Force(xint,yint,1);%   which forces should we use?
-%         if D2 == 1;
-%             Fy = Force(xint,yint,2);
-%         else
-%             Fy = 0;
-%         end
         
         vx(ii) = vx(ii) + dt*xforce/m;
         vy(ii) = vy(ii) + dt*yforce/m; 
         xx(ii,jj+1) = xx(ii,jj) + vx(ii)*dt;
         yy(ii,jj+1) = yy(ii,jj) + vy(ii)*dt;  
         
-        if DoStability ==1
+        if DoStability == 1
             K = zeros(4);
             K(3,1) = 1;
             K(4,2) = 1;
@@ -147,25 +151,25 @@ for ii = 1:np
             K(2,3) = -Fxy(xf,yf);
             K(2,4) = -Fyy(xf,yf);
         
-            M(ii,jj+1,:,:) = squeeze(M(ii,jj,:,:)) + K*squeeze(M(ii,jj,:,:))*sqrt(vx(ii)^2+vy(ii)^2)*dt;
+            msub = squeeze(M(ii,jj,:,:));
+            %det(msub)
+            %M(ii,jj+1,:,:) = msub + K*msub*sqrt(vx(ii)^2+vy(ii)^2)*dt;
+            M(ii,jj+1,:,:) = msub + K*msub*dt;
+        end
+        
+        
+        if CalculateVelocity == 1
+            vvxx(ii,jj) = vx(ii);
+            vvyy(ii,jj) = vy(ii);
         end
         
         
 
-        vvxx(ii,jj) = vx(ii);
-        vvyy(ii,jj) = vy(ii);
+        
+
 
     end
 end   
 
-  
-%%
-% if DoStability == 1
-%     save('june5.mat','xx','yy','vvxx','vvyy','M')
-% else
-%     save('june5.mat','xx','yy','vvxx','vvyy')
-% end
-% figure(5)
- %ColorSet = varycolor(np);
- %set(0,'DefaultAxesColorOrder',ColorSet);
- %plot(transpose(xx),transpose(yy),'g.','MarkerSize',1)
+xx = transpose(xx);
+yy = transpose(yy);
