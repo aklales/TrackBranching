@@ -10,6 +10,7 @@ para=1
 while [ $para -le 4 ]; do
    mkdir $para
    cp Potential.mat ./$para
+   cp betterbinz.m ./$para
    cp Propagate_interpolate.m ./$para
    cd $para
       pwd
