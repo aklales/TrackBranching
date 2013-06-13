@@ -7,14 +7,10 @@
 # (4) finally, it will be submitted to the queue
 
 para=1
-while [ $para -le 128 ]; do
+while [ $para -le 4 ]; do
    mkdir $para
-   cp bmain.cpp ./$para
-   cp impurities.txt ./$para
-   cp labmake.make ./$para
-   mv ic_${para}.txt ic.txt
-   cp ic.txt ./$para
-   rm ic.txt
+   cp Potential.mat ./$para
+   cp Propagate_interpolate.m ./$para
    cd $para
       pwd
 
@@ -25,9 +21,10 @@ while [ $para -le 128 ]; do
       echo "#BSUB -o branch_lsf.out" >> gobranch.bsub
       echo "#BSUB -e branch_lsf.err" >> gobranch.bsub
       echo "#BSUB -q short_serial" >> gobranch.bsub
-      echo "./branching " >> gobranch.bsub
+      echo "module load math/matlab-R2012b" >> gobranch.bsub
+      echo 'matlab -nosplash -nodesktop -r "Propagate_interpolate"' >> gobranch.bsub
 
-      make -f labmake.make
+#make -f labmake.make
 
       bsub < gobranch.bsub
 
