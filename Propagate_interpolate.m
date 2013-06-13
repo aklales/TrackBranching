@@ -173,3 +173,19 @@ end
 
 xx = transpose(xx);
 yy = transpose(yy);
+
+
+save('Results.mat','xx','yy');
+
+density = betterbinz(1024,256,xx,yy,Lx,Ly);
+
+
+
+
+
+
+
+
+
+
+
