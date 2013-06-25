@@ -21,7 +21,16 @@ Lx = max(xx);
 Ly = max(yy);
 M = length(xx);
 N = length(yy);
+nGauss = 5000;
 
+
+GaussianCenters = zeros(3,nGauss);
+
+for ii = 1:nGauss
+    GaussianCenters(1,ii) = Lx*rand(); 
+    GaussianCenters(2,ii) = Ly*rand();
+    GaussianCenters(3,ii) = 2*rand() - 1;
+end
 
 %%  potential
 sigma_rand = 1.5;
@@ -31,15 +40,15 @@ b = 128;
 
                                          %number of gaussians to do
 
-[Vrand,V_QPC,GaussianCenters, Fx_rand, Fy_rand, Fxx_rand, Fyy_rand, Fxy_rand , Fx_QPC, Fy_QPC, Fxx_QPC, Fyy_QPC, Fxy_QPC]  = Random_Potential_with_QPC(xx,yy,5000,sigma_rand,b,sigma_QPC,sigma_gap);
-Vimag = Z_AbsorbingBoundary(M,N,0.05);
+%[Vrand,V_QPC,GaussianCenters, Fx_rand, Fy_rand, Fxx_rand, Fyy_rand, Fxy_rand , Fx_QPC, Fy_QPC, Fxx_QPC, Fyy_QPC, Fxy_QPC]  = Random_Potential_with_QPC(xx,yy,5000,sigma_rand,b,sigma_QPC,sigma_gap);
+%Vimag = Z_AbsorbingBoundary(M,N,0.05);
 
 
 
-V = Vrand + V_QPC + Vimag;
+%V = Vrand + V_QPC + Vimag;
 
 
 %%  Output information needed for Classical Calculation
-save('Potential_4096_1024_i.mat','Vrand','V_QPC','Vimag','xx','yy', 'Fx_rand', 'Fy_rand', 'Fxx_rand', 'Fyy_rand', 'Fxy_rand' , 'Fx_QPC', 'Fy_QPC', 'Fxx_QPC', 'Fyy_QPC', 'Fxy_QPC');
+%save('Potential_4096_1024_i.mat','GaussianCenters','Vrand','V_QPC','Vimag','xx','yy', 'Fx_rand', 'Fy_rand', 'Fxx_rand', 'Fyy_rand', 'Fxy_rand' , 'Fx_QPC', 'Fy_QPC', 'Fxx_QPC', 'Fyy_QPC', 'Fxy_QPC','sigma_rand','b','sigma_gap','sigma_QPC');
 
-
+save('Potential_4096_1024_i_GS.mat','GaussianCenters','xx','yy','sigma_rand','b','sigma_gap','sigma_QPC');

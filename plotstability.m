@@ -1,7 +1,7 @@
-np = 10;
+np = 25;
 % xx = transpose(xx);
 % yy = transpose(yy);
-bob = 200000;
+bob = 4000;
 nu = zeros(np,bob);
 
 for ii = 1:np
@@ -17,4 +17,6 @@ for ii = 1:np
 end
 
 
-contourf(nu)
+%contourf(nu)
+figure(2)
+plot(transpose(nu))

@@ -129,6 +129,8 @@ for ii = 1:np
         xc = ceil(xx(ii,jj)/dx);
         yf = floor(yy(ii,jj)/dy);
         yc = ceil(yy(ii,jj)/dy);
+        xr = round(xx(ii,jj)/dx);
+        yr = round(yy(ii,jj)/dy);
 
         if ((xf < buffx) || (xf > (nW-buffx)) || (yf < buffy) || (yf > (nL-buffy))) 
                 
@@ -137,12 +139,17 @@ for ii = 1:np
         xforce = ((xc-(xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fx(xf,yf) + (-1*xf + (xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fx(xc,yc) + (xc-(xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fx(xf,yc) + (-1*xf + (xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fx(xc,yf));
         yforce = ((xc-(xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fy(xf,yf) + (-1*xf + (xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fy(xc,yc) + (xc-(xx(ii,jj)/dx))*(-1*yf + (yy(ii,jj)/dy))*Fy(xf,yc) + (-1*xf + (xx(ii,jj)/dx))*(yc-(yy(ii,jj)/dy))*Fy(xc,yf));
         
+        
+        
         vx(ii) = vx(ii) + dt*xforce/m;
         vy(ii) = vy(ii) + dt*yforce/m; 
         xx(ii,jj+1) = xx(ii,jj) + vx(ii)*dt;
         yy(ii,jj+1) = yy(ii,jj) + vy(ii)*dt;  
         
         if DoStability == 1
+            xxmid = (xx(ii,jj+1)+xx(ii,jj))/2;
+            yymid = (yy(ii,jj+1)+yy(ii,jj))/2;
+            
             K = zeros(4);
             K(3,1) = 1;
             K(4,2) = 1;
@@ -150,8 +157,20 @@ for ii = 1:np
             K(1,4) = -Fxy(xf,yf);
             K(2,3) = -Fxy(xf,yf);
             K(2,4) = -Fyy(xf,yf);
-        
+            
             msub = squeeze(M(ii,jj,:,:));
+            K1 = K*msub;
+        
+            
+            
+            
+            K2 = zeros(4);
+            K(3,1) = 1;
+            K(4,2) = 1;
+            K(1,3) = -Fxx(xf,yf);
+            K(1,4) = -Fxy(xf,yf);
+            K(2,3) = -Fxy(xf,yf);
+            K(2,4) = -Fyy(xf,yf);
             %det(msub)
             %M(ii,jj+1,:,:) = msub + K*msub*sqrt(vx(ii)^2+vy(ii)^2)*dt;
             M(ii,jj+1,:,:) = msub + K*msub*dt;
