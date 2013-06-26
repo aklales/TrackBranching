@@ -6,11 +6,13 @@ clear all;
 DontReload = 1;  %if 0, reloads potential from file; if 1, generates potential on the fly from Gaussian Centers; if otherwise, uses potential already loaded into memory
 
 
+potentialfile = 'Potential_4096_2048_TEST.mat';
+
 
 if DontReload == 0
     %clear all;
     fprintf('Potential is loading...\n')
-    load('Potential_4096_1024_i.mat')%loads Force and coords of entries in force matrix
+    load(potentialfile)%loads Force and coords of entries in force matrix
     fprintf('Potential loaded.\n')
     
     nW = length(xx);
@@ -32,7 +34,7 @@ end
 if DontReload ==1
     %clear all;
     fprintf('Gaussian Centers are loading...\n')
-    load('Potential_4096_1024_TEST.mat','xx','yy','GaussianCenters', 'sigma_rand', 'b','sigma_QPC','sigma_gap')%loads Force and coords of entries in force matrix
+    load(potentialfile,'xx','yy','GaussianCenters', 'sigma_rand', 'b','sigma_QPC','sigma_gap')%loads Force and coords of entries in force matrix
     fprintf('loaded!\n')
     
     nW = length(xx);
@@ -64,7 +66,7 @@ dt = 0.01;
 vf = sqrt(2*PEHO + vel^2);
 
 E = PEHO + vel^2/2;
-fprintf('Particle energy is %f',E);
+fprintf('Particle energy is %f\n',E);
 
 
 buffx = ceil(vf*dt/dx) + 1;
@@ -332,7 +334,7 @@ xx = transpose(xx);
 yy = transpose(yy);
 
 
-save('Results.mat','xx','yy');
+save('Results.mat','xx','yy','Lx','Ly');
 
 %density = betterbinz(1024,256,xx,yy,Lx,Ly);
 
