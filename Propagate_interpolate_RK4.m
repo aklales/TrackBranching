@@ -62,6 +62,11 @@ time = 4000;
 dt = 0.01;
 
 vf = sqrt(2*PEHO + vel^2);
+
+E = PEHO + vel^2/2;
+fprintf('Particle energy is %f',E);
+
+
 buffx = ceil(vf*dt/dx) + 1;
 buffy = ceil(vf*dt/dy) + 1;
 addpath ./MatlabFunctions
