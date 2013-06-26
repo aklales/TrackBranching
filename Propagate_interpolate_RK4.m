@@ -64,7 +64,7 @@ dt = 0.01;
 vf = sqrt(2*PEHO + vel^2);
 buffx = ceil(vf*dt/dx) + 1;
 buffy = ceil(vf*dt/dy) + 1;
-
+addpath /MatlabFunctions
 
 
 if (DoStability == 1 && DontReload == 0)
@@ -356,6 +356,8 @@ else
     
     
 end
+
+rmpath /MatlabFunctions
 
 xx = transpose(xx);
 yy = transpose(yy);

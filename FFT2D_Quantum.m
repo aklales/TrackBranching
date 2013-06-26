@@ -15,7 +15,10 @@ PEHO = 8.0;  %potential energy from harmonic oscillator
 
 load('Potential_4096_1024_i.mat','xx','yy','Vimag','V_QPC','Vrand')  % loads xx, yy and V
 disp('Potential loaded...')
+
+addpath /MatlabFunctions
 Vimag = AbsorbingBoundary(length(xx),length(yy),0.08);
+rmpath /MatlabFunctions
 
 V = V_QPC -  0.0033*1i*Vimag + Vrand;
 
