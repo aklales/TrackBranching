@@ -32,7 +32,7 @@ end
 if DontReload ==1
     %clear all;
     fprintf('Gaussian Centers are loading...\n')
-    load('Potential_4096_1024_i_GS.mat','xx','yy','GaussianCenters', 'sigma_rand', 'b','sigma_QPC','sigma_gap')%loads Force and coords of entries in force matrix
+    load('Potential_4096_1024_TEST.mat','xx','yy','GaussianCenters', 'sigma_rand', 'b','sigma_QPC','sigma_gap')%loads Force and coords of entries in force matrix
     fprintf('loaded!\n')
     
     nW = length(xx);
@@ -64,7 +64,7 @@ dt = 0.01;
 vf = sqrt(2*PEHO + vel^2);
 buffx = ceil(vf*dt/dx) + 1;
 buffy = ceil(vf*dt/dy) + 1;
-addpath /MatlabFunctions
+addpath ./MatlabFunctions
 
 
 if (DoStability == 1 && DontReload == 0)
@@ -248,20 +248,10 @@ if DontReload == 1
                 K(2,4) = -Fyy3;
                 
                 K4 = K*(msub + dt*K3);
-        
-            
-            
-            
-%                 K2 = zeros(4);
-%                 K(3,1) = 1;
-%                 K(4,2) = 1;
-%                 K(1,3) = -Fxx(xf,yf);
-%                 K(1,4) = -Fxy(xf,yf);
-%                 K(2,3) = -Fxy(xf,yf);
-%                 K(2,4) = -Fyy(xf,yf);
 
                 if mod(jj,250) == 0
-                    current_determinant = det(msub) - 1
+                    current_determinant = det(msub) - 1;
+                    fprintf('Deviation of determinant from 1.0 is %f\n',current_determinant);
                 end
                 
                 M(ii,jj+1,:,:) = msub + (dt/6)*(K1 + 2*K2 + 2*K3 + K4);
@@ -273,15 +263,10 @@ if DontReload == 1
                 vvyy(ii,jj) = vy(ii);
             end
         
-        
-
-        
-
-
         end
     end  
 else
-    %Use potential from file
+    %Use grid potential from file
     fprintf('Propagation has begun. Using potential from file.\n')
     for ii = 1:np
         if mod(ii,1)==0
@@ -312,8 +297,6 @@ else
             yy(ii,jj+1) = yy(ii,jj) + vy(ii)*dt;  
         
             if DoStability == 1
-                %xxmid = (xx(ii,jj+1)+xx(ii,jj))/2;
-                %yymid = (yy(ii,jj+1)+yy(ii,jj))/2;
             
                 K = zeros(4);
                 K(3,1) = 1;
@@ -324,19 +307,6 @@ else
                 K(2,4) = -Fyy(xf,yf);
             
                 msub = squeeze(M(ii,jj,:,:));
-                %K1 = K*msub;
-        
-            
-            
-            
-%                 K2 = zeros(4);
-%                 K(3,1) = 1;
-%                 K(4,2) = 1;
-%                 K(1,3) = -Fxx(xf,yf);
-%                 K(1,4) = -Fxy(xf,yf);
-%                 K(2,3) = -Fxy(xf,yf);
-%                 K(2,4) = -Fyy(xf,yf);
-                %det(msub)
                 M(ii,jj+1,:,:) = msub + K*msub*dt;
             end
         
@@ -345,19 +315,13 @@ else
                 vvxx(ii,jj) = vx(ii);
                 vvyy(ii,jj) = vy(ii);
             end
-        
-        
-
-        
-
-
         end
     end 
     
     
 end
 
-rmpath /MatlabFunctions
+rmpath ./MatlabFunctions
 
 xx = transpose(xx);
 yy = transpose(yy);
@@ -365,7 +329,7 @@ yy = transpose(yy);
 
 save('Results.mat','xx','yy');
 
-density = betterbinz(1024,256,xx,yy,Lx,Ly);
+%density = betterbinz(1024,256,xx,yy,Lx,Ly);
 
 
 
