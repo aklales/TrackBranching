@@ -47,8 +47,11 @@ for ii = 1:m
     for jj = 1:n
         
         % We get effects from the Gaussians...
-        [Fx,Fy,Fxx,Fyy,Fxy,pot] = Find__Force(xx(ii),yy(jj),GaussianCenters,sigma_rand);
         
+        addpath /MatlabFunctions
+        [Fx,Fy,Fxx,Fyy,Fxy,pot] = Find__Force(xx(ii),yy(jj),GaussianCenters,sigma_rand);
+        rmpath /MatlabFunctions
+
         V_QPC(ii,jj) = b*(exp(-(xx(ii)-2*sigma_QPC)^2/(2*sigma_QPC^2)) - exp(-(xx(ii)-2*sigma_QPC)^2/(2*sigma_QPC^2)-(yy(jj)-Ly/2)^2 /(2*sigma_gap^2)));
         Fx_QPC(ii,jj) = b*(  (1/sigma_QPC^2)  *  (xx(ii)-2*sigma_QPC)  *  exp(-(xx(ii)-2*sigma_QPC)^2/(2*sigma_QPC^2))  -  (1/sigma_QPC^2)  *  (xx(ii)-2*sigma_QPC)  *  exp(-(xx(ii)-2*sigma_QPC)^2/(2*sigma_QPC^2)-(yy(jj)-Ly/2)^2 /(2*sigma_gap^2)));
         Fy_QPC(ii,jj) = b*(- (1/sigma_gap^2)  *  (yy(jj)-Ly/2)  *  exp(-(xx(ii)-2*sigma_QPC)^2/(2*sigma_QPC^2)-(yy(jj)-Ly/2)^2 /(2*sigma_gap^2)));
